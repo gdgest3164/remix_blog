@@ -1,6 +1,8 @@
-import { ActionIcon, BackgroundImage, Box, Divider, Menu, Space, Title } from "@mantine/core";
+import { ActionIcon, BackgroundImage, Box, Divider, List, Menu, Space, Text, Title } from "@mantine/core";
 import { Link } from "@remix-run/react";
 import { IconBackground, IconChevronLeft, IconDotsVertical, IconPencil, IconTrash } from "@tabler/icons-react";
+import CommentItem from "~/components/Comment/Item";
+import CommentUpload from "~/components/Comment/Upload";
 
 export default function postRead() {
   return (
@@ -30,7 +32,17 @@ export default function postRead() {
           </Menu.Dropdown>
         </Menu>
       </Box>
-      <Divider mt={20} mb={15} />글 내용
+      <Divider mt={20} mb={15} />
+      안녕하세요
+      <Divider mt={20} mb={15} />
+      <Box>
+        <Text>댓글 2개</Text>
+        <Space h="lg" />
+      </Box>
+      <CommentUpload />
+      <List>
+        <CommentItem comment={{ writer: "김동한", create_at: "2023-11-19", content: "test" }} />
+      </List>
     </Box>
   );
 }

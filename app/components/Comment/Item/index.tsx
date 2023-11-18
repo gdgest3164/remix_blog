@@ -17,7 +17,7 @@ export default function CommentItem({ comment }: any) {
         </Box>
         <Menu shadow="md" width={200} position="left-start">
           <Menu.Target>
-            <ActionIcon style={{ background: "white", color: "black" }}>
+            <ActionIcon style={{ background: "none", color: "black" }}>
               <IconDotsVertical />
             </ActionIcon>
           </Menu.Target>

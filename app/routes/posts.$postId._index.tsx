@@ -10,7 +10,7 @@ export default function postRead() {
       <Box style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <Box style={{ display: "flex", alignItems: "center" }}>
           <Link to={"/"} style={{ display: "flex", alignItems: "center" }}>
-            <ActionIcon style={{ background: "white", color: "black" }}>
+            <ActionIcon style={{ background: "none", color: "black" }}>
               <IconChevronLeft />
             </ActionIcon>
           </Link>
@@ -19,7 +19,7 @@ export default function postRead() {
         </Box>
         <Menu shadow="md" width={200} position="left-start">
           <Menu.Target>
-            <ActionIcon style={{ background: "white", color: "black" }}>
+            <ActionIcon style={{ background: "none", color: "black" }}>
               <IconDotsVertical />
             </ActionIcon>
           </Menu.Target>
@@ -40,8 +40,9 @@ export default function postRead() {
         <Space h="lg" />
       </Box>
       <CommentUpload />
-      <List>
+      <List style={{ background: "#f6f6f6", margin: "15px 0", padding: "0 15px", borderRadius: "10px" }}>
         <CommentItem comment={{ writer: "김동한", create_at: "2023-11-19", content: "test" }} />
+        <CommentItem comment={{ writer: "김동한1", create_at: "2023-11-19", content: "test2" }} />
       </List>
     </Box>
   );

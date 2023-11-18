@@ -8,7 +8,7 @@ export default function postUpdate() {
     <Box style={{ padding: "45px" }}>
       <Box style={{ display: "flex", alignItems: "center" }}>
         <Link to={"/"} style={{ display: "flex", alignItems: "center" }}>
-          <ActionIcon style={{ background: "white", color: "black" }}>
+          <ActionIcon style={{ background: "none", color: "black" }}>
             <IconChevronLeft />
           </ActionIcon>
         </Link>

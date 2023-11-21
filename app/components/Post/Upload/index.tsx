@@ -64,7 +64,7 @@ export function PostUpload({ defaultValue }: { defaultValue?: string }) {
 
         <RichTextEditor.Content mih={400} />
       </RichTextEditor>
-      <input type="hidden" name="cnotent" value={content} />
+      <input type="hidden" name="content" value={content} />
     </>
   );
 }

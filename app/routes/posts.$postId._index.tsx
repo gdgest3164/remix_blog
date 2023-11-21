@@ -1,6 +1,6 @@
-import { ActionIcon, BackgroundImage, Box, Divider, List, Menu, Space, Text, Title } from "@mantine/core";
+import { ActionIcon, Box, Divider, List, Menu, Space, Text, Title } from "@mantine/core";
 import { Link } from "@remix-run/react";
-import { IconBackground, IconChevronLeft, IconDotsVertical, IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconChevronLeft, IconDotsVertical, IconPencil, IconTrash } from "@tabler/icons-react";
 import CommentItem from "~/components/Comment/Item";
 import CommentUpload from "~/components/Comment/Upload";
 

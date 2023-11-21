@@ -1,15 +1,29 @@
-import type { MetaFunction } from "@remix-run/node";
-import { IconAlarm } from "@tabler/icons-react";
-import { ActionIcon, Box, Button, Divider, Title } from "@mantine/core";
-import { Link } from "@remix-run/react";
+import { json, type LoaderFunction, type MetaFunction } from "@remix-run/node";
+import { Box, Button, Divider, Title } from "@mantine/core";
+import { Link, useLoaderData } from "@remix-run/react";
 import List from "~/components/List";
 import PostItem from "~/components/Post/Item";
+import { TPost, getPosts } from "~/models/post.service";
+import { useState } from "react";
 
 export const meta: MetaFunction = () => {
   return [{ title: "New Remix App" }, { name: "description", content: "Welcome to Remix!" }];
 };
 
+interface ILoaderData {
+  posts: Array<TPost>;
+}
+
+export const loader: LoaderFunction = async () => {
+  const getPostResponse = await getPosts();
+  return json<ILoaderData>({
+    posts: (getPostResponse.data as unknown as Array<TPost>) ?? [],
+  });
+};
+
 export default function Index() {
+  const loaderData = useLoaderData<ILoaderData>();
+  const [posts] = useState(loaderData.posts);
   return (
     <Box style={{ padding: "45px" }}>
       <Box style={{ display: "flex", justifyContent: "space-between" }}>
@@ -22,16 +36,9 @@ export default function Index() {
       </Box>
       <Divider mt={20} mb={15} />
       <List>
-        <PostItem post={{ title: "안녕하세요", content: "하이", commentCount: 2, create_at: "2023-11-19" }}></PostItem>
-        <PostItem
-          post={{
-            title: "안녕하세요1",
-            content:
-              "안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1안녕하세요1",
-            commentCount: 5,
-            create_at: "2023-11-19",
-          }}
-        ></PostItem>
+        {posts.map((post: TPost, i: any) => (
+          <PostItem key={i} post={post as TPost}></PostItem>
+        ))}
       </List>
     </Box>
   );

@@ -12,12 +12,12 @@ export async function getCommentPassword(id: number) {
   return await supabase.from("comment").select("password").eq("id", id).limit(1).single();
 }
 
-export async function createComment(content: string, password: string, post_id: number, wirter: string) {
-  return await supabase.from("comment").insert([{ content, password, post_id, wirter }]).select();
+export async function createComment(content: string, password: string, post_id: number, writer: string) {
+  return await supabase.from("comment").insert([{ content, password, post_id, writer }]).select();
 }
 
-export async function updateComment(id: number, content: string, password: string, post_id: number, wirter: string) {
-  return await supabase.from("comment").update({ content, password, post_id, wirter }).eq("id", id).select();
+export async function updateComment(id: number, content: string) {
+  return await supabase.from("comment").update({ content }).eq("id", id).select();
 }
 
 export async function deleteComment(id: number) {

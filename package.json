@@ -29,10 +29,15 @@
     "@tiptap/pm": "^2.1.12",
     "@tiptap/react": "^2.1.12",
     "@tiptap/starter-kit": "^2.1.12",
+    "@visx/group": "^3.3.0",
+    "@visx/mock-data": "^3.3.0",
+    "@visx/scale": "^3.5.0",
+    "@visx/shape": "^3.5.0",
     "isbot": "^3.6.8",
     "qs": "^6.11.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "remix-utils": "^7.3.0",
     "supabase": "^1.112.0"
   },
   "devDependencies": {

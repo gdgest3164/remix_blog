@@ -1,14 +1,17 @@
 import { ActionIcon, Box, Button, Center, Divider, List, Menu, Modal, PasswordInput, Space, Text, Title } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import { ActionFunction, LoaderFunction, json, redirect } from "@remix-run/node";
-import { Form, Link, useActionData, useLoaderData } from "@remix-run/react";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
+import { Form, Link, useActionData, useLoaderData, useNavigation } from "@remix-run/react";
 import { IconChevronLeft, IconDotsVertical, IconPencil, IconTrash } from "@tabler/icons-react";
 import QueryString from "qs";
 import { useEffect, useState } from "react";
 import CommentItem from "~/components/Comment/Item";
 import CommentUpload from "~/components/Comment/Upload";
-import { TComment, createComment, deleteComment, getCommentPassword, updateComment } from "~/models/comment.service";
-import { TPost, deletePost, getPost } from "~/models/post.service";
+import type { TComment } from "~/models/comment.service";
+import { createComment, getCommentPassword, updateComment } from "~/models/comment.service";
+import type { TPost } from "~/models/post.service";
+import { deletePost, getPost } from "~/models/post.service";
 
 interface ILoaderData {
   post: TPost;
@@ -32,6 +35,7 @@ type InputData = {
 };
 
 interface IActionData {
+  error?: boolean | false;
   message: TMessage;
 }
 
@@ -107,8 +111,20 @@ export const action: ActionFunction = async ({ request, params }) => {
             },
           });
         } else {
-          await deleteComment(parseInt(data.commentId));
-          return redirect(`/posts/${postId}`);
+          try {
+            throw new Error("test");
+            // await deleteComment(parseInt(data.commentId));
+            // return redirect(`/posts/${postId}`);
+          } catch {
+            return json<IActionData>({
+              error: true,
+              message: {
+                title: "삭제 실패",
+                color: "red",
+                message: "알 수 업슨 오류가 발생했습니다..",
+              },
+            });
+          }
         }
       } else {
         return json<IActionData>({
@@ -125,9 +141,10 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function PostRead() {
   const loaderData = useLoaderData<ILoaderData>();
+  const actionData = useActionData<IActionData>();
+  const navigation = useNavigation();
   const [post, setPost] = useState<TPost>(loaderData.post);
   const [deleteModalOpened, setDeleteModalOpend] = useState(false);
-  const actionData = useActionData<IActionData>();
   const [message, setMessage] = useState<IActionData>();
 
   useEffect(() => {
@@ -217,6 +234,20 @@ export default function PostRead() {
         {(post.comment as TComment[]).map((comment: TComment, i: number) => (
           <CommentItem key={i} comment={comment} />
         ))}
+        {navigation.state === "submitting" && navigation.formData?.get("action") === InputType.CREATE_COMMENT && (
+          <>
+            <CommentItem
+              isUpload
+              comment={{
+                id: 0,
+                writer: navigation.formData?.get("commentWriter") as string,
+                content: navigation.formData?.get("commentContent") as string,
+                created_at: new Date().toISOString(),
+                post_id: 0,
+              }}
+            />
+          </>
+        )}
       </List>
     </Box>
   );

@@ -1,7 +1,8 @@
 import { ActionIcon, Box, Button, Divider, PasswordInput, Space, TextInput, Title } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import { ActionFunction, json, redirect } from "@remix-run/node";
-import { Form, Link, useActionData } from "@remix-run/react";
+import type { ActionFunction } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
+import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
 import { IconChevronLeft } from "@tabler/icons-react";
 import QueryString from "qs";
 import { useEffect, useState } from "react";
@@ -45,6 +46,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function PostCreate() {
+  const navigation = useNavigation();
   const actionData = useActionData<IActionData>();
   const [message, setMessage] = useState<IActionData>();
 
@@ -76,14 +78,16 @@ export default function PostCreate() {
       </Box>
       <Divider mt={20} mb={15} />
       <Form method="post">
-        <TextInput placeholder="제목" variant="filled" size="x" name="title" />
+        <TextInput placeholder="제목" variant="filled" size="x" name="title" disabled={navigation.state === "submitting"} required />
         <Space h="xl" />
-        <PostUpload />
+        <Box style={{ pointerEvents: navigation.state === "submitting" ? "none" : "initial" }}>
+          <PostUpload />
+        </Box>
         <Space h="xl" />
         <Box style={{ display: "flex", justifyContent: "end" }}>
-          <PasswordInput style={{ minWidth: "200px" }} placeholder="비밀번호" name="password" />
+          <PasswordInput style={{ minWidth: "200px" }} placeholder="비밀번호" name="password" disabled={navigation.state === "submitting"} required />
           <Space w={"xs"} />
-          <Button color="blue" type="submit">
+          <Button color="blue" type="submit" loading={navigation.state === "submitting"}>
             작성하기
           </Button>
         </Box>

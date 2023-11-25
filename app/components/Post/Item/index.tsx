@@ -1,6 +1,6 @@
 import { Box, Space, Text, Title } from "@mantine/core";
 import { Link } from "@remix-run/react";
-import { TPost } from "~/models/post.service";
+import type { TPost } from "~/models/post.service";
 
 interface IPostItem {
   post: TPost;

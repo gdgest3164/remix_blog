@@ -1,5 +1,5 @@
 import { ActionIcon, Box, Button, Center, Menu, Modal, PasswordInput, Space, Text, Textarea } from "@mantine/core";
-import { Form } from "@remix-run/react";
+import { useFetcher } from "@remix-run/react";
 import { IconDotsVertical, IconPencil, IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
 import type { TComment } from "~/models/comment.service";
@@ -7,16 +7,27 @@ import { InputType } from "~/routes/posts.$postId._index";
 
 interface ICommentItem {
   comment: TComment;
+  isUpload?: boolean;
 }
 
-export default function CommentItem({ comment }: ICommentItem) {
+export default function CommentItem({ comment, isUpload }: ICommentItem) {
+  const fetcher = useFetcher();
   const createAtDate = comment.created_at ? new Date(comment.created_at.replace(" ", "T").split(".")[0]) : "";
   const [mode, setMode] = useState<"view" | "edit">("view");
   const [deleteModalOpened, setDeleteModalOpend] = useState(false);
   return (
-    <Box style={{ padding: "15px 0", borderBottom: "1px solid #eaeaea", userSelect: "element" }}>
+    <Box
+      style={{
+        padding: "15px 0",
+        borderBottom: "1px solid #eaeaea",
+        userSelect: "element",
+        opacity: fetcher.state !== "idle" || isUpload ? 0.5 : 1,
+        color: typeof fetcher.data === "object" && fetcher.data !== null && "error" in fetcher.data && fetcher.data.error ? "red" : "inherit",
+      }}
+    >
       <Box style={{ display: "flex", justifyContent: "space-between" }}>
         <Box>
+          {JSON.stringify(fetcher)}
           <Text>{comment.writer}</Text>
           <Text>
             {createAtDate && createAtDate.toLocaleDateString()} {createAtDate && createAtDate.toLocaleTimeString()}
@@ -47,10 +58,10 @@ export default function CommentItem({ comment }: ICommentItem) {
         <Modal opened={deleteModalOpened} onClose={() => setDeleteModalOpend(false)} title="댓글 삭제">
           <Text style={{ textAlign: "center" }}>댓글을 삭제하기 위해서는 비밀번호를 입력해 주세요</Text>
           <Space h="lg" />
-          <Form method="post" onSubmit={() => setDeleteModalOpend(false)}>
+          <fetcher.Form method="post" onSubmit={() => setDeleteModalOpend(false)}>
             <input type="hidden" name="commentId" value={comment.id} />
             <Center>
-              <PasswordInput style={{ minWidth: "300px" }} name="password" placeholder="관리자 비밀번호" />
+              <PasswordInput style={{ minWidth: "300px" }} name="password" placeholder="관리자 비밀번호" required />
             </Center>
             <Space h="lg" />
             <Box style={{ display: "flex", justifyContent: "center" }}>
@@ -62,7 +73,7 @@ export default function CommentItem({ comment }: ICommentItem) {
                 삭제
               </Button>
             </Box>
-          </Form>
+          </fetcher.Form>
         </Modal>
       </Box>
       <Space h="md" />
@@ -71,12 +82,12 @@ export default function CommentItem({ comment }: ICommentItem) {
         <Text>{comment.content}</Text>
       ) : (
         <Box>
-          <Form method="post" onSubmit={() => setMode("view")}>
+          <fetcher.Form method="post" onSubmit={() => setMode("view")}>
             <input type="hidden" name="commentId" value={comment.id} />
-            <Textarea name="commentContent" placeholder="댓글을 입력하세요." defaultValue={comment.content ?? ""} />
+            <Textarea name="commentContent" placeholder="댓글을 입력하세요." defaultValue={comment.content ?? ""} required />
             <Space h="lg" />
             <Box style={{ display: "flex", justifyContent: "end" }}>
-              <PasswordInput style={{ minWidth: "200px" }} name="commentPassword" placeholder="댓글 비밀번호" />
+              <PasswordInput style={{ minWidth: "200px" }} name="commentPassword" placeholder="댓글 비밀번호" required />
               <Space w="xs" />
               <Button variant="default" onClick={() => setMode("view")}>
                 취소
@@ -86,7 +97,7 @@ export default function CommentItem({ comment }: ICommentItem) {
                 수정
               </Button>
             </Box>
-          </Form>
+          </fetcher.Form>
         </Box>
       )}
     </Box>
